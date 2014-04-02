@@ -1,4 +1,6 @@
 class nginx {
+  $pid_file = '/var/run/nginx.pid'
+
   apt::key { 'nginx':
     key        => '7BD9BF62',
     key_source => 'http://nginx.org/keys/nginx_signing.key',
@@ -22,6 +24,7 @@ class nginx {
   user { 'nginx':
     ensure  => present,
     gid     => 'nginx',
+    groups  => ['soupmail'],
     require => Group['nginx']
   }
 
@@ -56,5 +59,10 @@ class nginx {
     recurse => true,
     purge   => true,
     require => Package['nginx']
+  }
+
+  monit::conf { 'nginx':
+    content => template('nginx/nginx.monit.erb'),
+    require => Service['nginx']
   }
 }
