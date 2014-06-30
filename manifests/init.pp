@@ -1,4 +1,6 @@
 class nginx {
+  include apt
+
   $pid_file = '/var/run/nginx.pid'
 
   apt::key { 'nginx':
